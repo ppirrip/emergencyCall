@@ -3,8 +3,9 @@ Common routines for emergency call
 """
 
 import config as config
-
 import logging
+from twilioAPI import twilioSendSMS
+
 import speech_recognition as sr
 
 r = sr.Recognizer()
@@ -37,10 +38,14 @@ def tts():
         value = r.recognize_google(audio)
 
         # we need some special handling here to correctly print unicode characters to standard output
+        msg = None
         if str is bytes:  # this version of Python uses bytes for strings (Python 2)
-            logging.info(u"You said {}".format(value).encode("utf-8"))
+            msg = u"{}".format(value).encode("utf-8")
         else:  # this version of Python uses unicode for strings (Python 3+)
-            logging.info("You said {}".format(value))
+            msg = "{}".format(value)
+
+        logging.info("you said: " + msg)
+        sms(msg) # send out a help sms via twilio
 
     except sr.UnknownValueError:
         # this is the tricky part, is the user:
@@ -56,3 +61,28 @@ def tts():
 def secondConfirm():
     logging.warning("Can't get user input, ask for confirmation / sencondary input [TODO]")
     pass
+
+
+def sms(msg):
+    twilioSendSMS(msg)
+
+"""
+
+from twilio.rest import Client
+
+def twilioSendSMS(msg):
+    # Your Account SID from twilio.com/console
+    account_sid = "your account id"
+    # Your Auth Token from twilio.com/console
+    auth_token  = "your_auth_token"
+
+    client = Client(account_sid, auth_token)
+
+    message = client.messages.create(
+        to="+15558675309", 
+        from_="+15017250604",
+        body=msg)
+
+    print(message.sid)
+
+"""
