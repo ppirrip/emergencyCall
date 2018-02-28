@@ -28,7 +28,7 @@ def prepTTS():
         r.adjust_for_ambient_noise(source)
         logging.info("Set minimum energy threshold to {}".format(r.energy_threshold))
 
-def tts():
+def tts(sms=True):
     logging.info("Any message you want to add?")
     with m as source: 
         audio = r.listen(source)
@@ -45,7 +45,8 @@ def tts():
             msg = "{}".format(value)
 
         logging.info("you said: " + msg)
-        sms(msg) # send out a help sms via twilio
+        if sms == True:
+            sms("from Aidex Emergency Call System: " + msg) # send out a help sms via twilio
 
     except sr.UnknownValueError:
         # this is the tricky part, is the user:

@@ -6,7 +6,6 @@ This is based on Snowboy demo_threaded.
 Python 2.7 is used on both Ubuntu 16.04 and Raspbian
 
 @TODO: 
-- add Twillo interface
 - replace printf with voice output
 - add a decent console
 
